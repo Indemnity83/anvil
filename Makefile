@@ -31,11 +31,13 @@ run: ## Run container on port configured in `.env`
 
 up: build run ## Build the container then run it
 
+fresh: build-nc run ## build without cache and run the container
+
 clean: stop ## Stop any running containers and remove the image
-	docker rm $(IMAGE_NAME); docker rmi $(IMAGE_NAME)
+	docker image ls $(IMAGE_NAME) -q | grep -q . && docker rmi $(IMAGE_NAME) || exit 0
 
 stop: ## Stop a running container
-	docker stop $(IMAGE_NAME)
+	docker ps -q --filter "name=$(IMAGE_NAME)" | grep -q . && docker stop "$(IMAGE_NAME)" && docker rm -f "$(IMAGE_NAME)" || exit 0
 
 release: build-nc publish ## Make a release by building and publishing the `{version}` and `latest` tagged containers to Dockerhub
 
