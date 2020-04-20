@@ -1,13 +1,10 @@
-cnf ?= .env
-include $(cnf)
-export $(shell sed 's/=.*//' $(cnf))
-
 VERSION ?= $(shell cat .version)
 
 IMAGE_NAME = anvil
 IMAGE_ORG = indemnity83
 
-PORT = 8080
+HTTP = 8080
+MANAGE = 8888
 VOLUME = `pwd`/storage
 
 # HELP
@@ -30,7 +27,7 @@ build-nc: ## Build the container without caching
 	docker build --build-arg VERSION=$(VERSION) --no-cache -t $(IMAGE_NAME) .
 
 run: ## Run container on port configured in `.env`
-	docker run -it --rm --env-file .env -v $(VOLUME):/storage -p $(PORT):8080 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
+	docker run -it --rm -v $(VOLUME):/home/anvil/ -p $(HTTP):8080 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
 
 up: build run ## Build the container then run it
 
