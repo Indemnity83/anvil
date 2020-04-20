@@ -3,14 +3,19 @@ from flask_restful import Resource
 
 
 class DeployScript(Resource):
+    script_path = '/srv/anvil/appdata/deploy.sh'
+
     def get(self):
-        with open('/home/anvil/storage/deploy/deploy.sh', 'r') as file:
-            return file.read()
+        script_file = open(self.script_path, 'r')
+
+        return script_file.read()
 
     def post(self):
-        with open('/home/anvil/storage/deploy/deploy.sh', 'w') as file:
-            data = request.get_json()
-            file.write(data['script'])
-            return {
-                'status': 'success',
-            }
+        script_file = open(self.script_path, 'w')
+
+        data = request.get_json()
+        script_file.write(data['script'])
+        
+        return {
+            'status': 'success',
+        }

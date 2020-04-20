@@ -6,34 +6,17 @@ from flask_restful import Resource
 
 
 class Install(Resource):
+    install_script = '/srv/anvil/scripts/install.sh'
+    log_file_path = '/srv/anvil/appdata/install.log'
+
     def post(self):
+        log_file = open(self.log_file_path, 'w')
+
         install = request.get_json()
         repository = 'https://github.com/' + install['repository']
-        # Clone repository
-        subprocess.run('git clone --depth=1 -b ' + install['branch'] + ' ' + repository + ' .',
-                       shell=True, cwd='/home/anvil')
 
-        # Install composer dependencies
-        if install['dependencies']:
-            subprocess.run('composer install --optimize-autoloader --no-dev',
-                       shell=True, cwd='/home/anvil')
-
-        # Deploy the .env file
-        subprocess.run('cp .env.example .env',
-                       shell=True, cwd='/home/anvil')
-
-        # Generate Key
-        subprocess.run('php artisan key:generate',
-                       shell=True, cwd='/home/anvil')
-
-        # Make sqlite database file
-        subprocess.run('touch storage/database.sqlite',
-                       shell=True, cwd='/home/anvil')
-
-        # Make default deploy script
-        subprocess.run('mkdir -p storage/deploy')
-        subprocess.run('touch storage/deploy/deploy.sh',
-                        shell=True, cwd='/home/anvil')
+        # TODO: provide feedback to user on progress/status
+        subprocess.Popen(['sh', self.install_script, repository, install['branch']], stdout=log_file, stderr=log_file, cwd='/home/anvil')
 
         return {'status': 'success'}
 

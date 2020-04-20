@@ -4,11 +4,17 @@ import requests
 
 
 class Deploy(Resource):
-    def post(self):
-        with open('/home/anvil/storage/deploy/deploy.log', 'w') as file:
-            subprocess.run('date', stdout=file, stderr=file)
-            out = subprocess.run(['sh', '/home/anvil/storage/deploy/deploy.sh'], cwd='/home/anvil', stdout=file, stderr=file)
+    script_path = '/srv/anvil/appdata/deploy.sh'
+    log_file_path = '/srv/anvil/appdata/deploy.log'
 
+    def post(self):
+        log_file = open(self.log_file_path, 'w')
+
+        # Start by dumping the system date at the top of the file then run the deploy script
+        subprocess.run('date', stdout=log_file, stderr=log_file, cwd='/home/anvil')
+        subprocess.Popen(['sh',self.script_path ], stdout=log_file, stderr=log_file, cwd='/home/anvil')
+
+        # TODO: This response mirrors the structure of Forge, but obviously needs some work
         response = {
             'status': 'success',
             'server': {

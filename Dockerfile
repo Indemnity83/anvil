@@ -31,11 +31,16 @@ COPY config/php.ini /etc/php7/conf.d/custom.ini
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisord.conf
 
-# Deploy the management application
-RUN mkdir -p /srv/anvil/www && \
-    mkdir -p /srv/anvil/api
+# Make the application data folder
+RUN mkdir -p /srv/anvil/appdata
+
+# Copy the application scripts into the container
+COPY ./src/scripts /srv/anvil/scripts
+
+# Copy the built vue app into the container
 COPY --from=build-www /app/dist /srv/anvil/www
 
+# Deploy python application into the continer
 WORKDIR /srv/anvil/api
 COPY src/api/requirements.txt ./
 RUN pip3 install gunicorn
@@ -60,6 +65,7 @@ WORKDIR /home/anvil
 # Expose the application
 EXPOSE 8080
 VOLUME /home/anvil/
+VOLUME /srv/anvil/appdata
 
 # Run the init script on startup
 CMD ["/usr/bin/supervisord"]
