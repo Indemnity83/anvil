@@ -12,4 +12,3 @@ composer install --optimize-autoloader --no-dev
 # TODO: These steps assume its a laravel app and are happy path only
 cp .env.example .env
 php artisan key:generate
-touch database/database.sqlite
