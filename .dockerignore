@@ -1,3 +1,4 @@
+/.git
 /.idea
 /node_modules
 /public/hot
@@ -6,6 +7,9 @@
 /public/css
 /public/mix-manifest.json
 /storage/*.key
+/storage/framework/cache/**
+/storage/framework/sessions/**
+/storage/framework/views/**
 /vendor
 /build
 .env

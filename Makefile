@@ -5,13 +5,13 @@ IMAGE_ORG = indemnity83
 
 HTTP = 8080
 MANAGE = 8888
-SITES = `pwd`/test/sites
-APPDATA = `pwd`/test/appdata
+SITES = `pwd`/build/sites
+APPDATA = `pwd`/build/appdata
 
 # HELP
 # This will output the help for each task
 # thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-.PHONY: help
+.PHONY: help build
 
 help: ## This help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -28,14 +28,15 @@ build-nc: ## Build the container without caching
 	docker build --build-arg VERSION=$(VERSION) --no-cache -t $(IMAGE_NAME) .
 
 run: ## Run container on port configured in `.env`
-	docker run -it --rm -v $(SITES):/home/anvil/ -v $(APPDATA):/srv/anvil/appdata/ -p $(HTTP):8080 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
+	docker run -it --rm -v $(SITES):/home/anvil/ -v $(APPDATA):/anvil/storage -p $(HTTP):8080 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
 
 up: build run ## Build the container then run it
 
 fresh: build-nc run ## build without cache and run the container
 
-clean: stop ## Stop any running containers and remove the image
+clean: stop ## Stop any running containers and remove the image and build directories
 	docker image ls $(IMAGE_NAME) -q | grep -q . && docker rmi $(IMAGE_NAME) || exit 0
+	rm -r build
 
 stop: ## Stop a running container
 	docker ps -q --filter "name=$(IMAGE_NAME)" | grep -q . && docker stop "$(IMAGE_NAME)" && docker rm -f "$(IMAGE_NAME)" || exit 0
@@ -67,4 +68,3 @@ tag-version: build ## Generate container `{version}` tag
 
 version: ## Output the current version
 	@echo $(VERSION)
-	

@@ -1,9 +1,10 @@
-FROM node:latest as build-www
+FROM node:latest as build-assets
 WORKDIR /app
-COPY src/www/package*.json ./
+COPY package*.json tailwind.config.js webpack.mix.js ./
 RUN npm install
-COPY ./src/www .
-RUN npm run build
+COPY resources/js ./resources/js
+COPY resources/css ./resources/css
+RUN npm run production
 
 FROM alpine
 LABEL maintainer="Kyle Klaus <kklaus@indemnity83.com>"
@@ -17,42 +18,28 @@ RUN apk --no-cache add git composer nginx supervisor npm \
     php php7-fpm php7-json php7-mbstring php7-iconv php7-pcntl php7-posix php7-sodium \
     php7-session php7-xml php7-curl php7-fileinfo php7-gd php7-intl php7-zip \
     php7-simplexml php7-pdo php7-sqlite3 php7-pdo_sqlite php7-exif php7-pdo_mysql \
-    php7-pdo_pgsql php7-pdo_odbc php7-dom php7-xmlwriter php7-tokenizer \
-    python3 py3-pip
+    php7-pdo_pgsql php7-pdo_odbc php7-dom php7-xmlwriter php7-tokenizer
 
 # Configure NGINX
-COPY config/nginx.conf /etc/nginx/nginx.conf
+COPY resources/serve/nginx.conf /etc/nginx/nginx.conf
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Configure PHP-FPM
-COPY config/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
-COPY config/php.ini /etc/php7/conf.d/custom.ini
+COPY resources/serve/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
+COPY resources/serve/php.ini /etc/php7/conf.d/custom.ini
 
 # Configure supervisord
-COPY config/supervisord.conf /etc/supervisord.conf
+COPY resources/serve/supervisord.conf /etc/supervisord.conf
 
 # Make the application data folder
-RUN mkdir -p /srv/anvil/appdata
-
-# Copy the application scripts into the container
-COPY ./src/scripts /srv/anvil/scripts
-
-# Copy the built vue app into the container
-COPY --from=build-www /app/dist /srv/anvil/www
-
-# Deploy python application into the continer
-WORKDIR /srv/anvil/api
-COPY src/api/requirements.txt ./
-RUN pip3 install gunicorn
-RUN pip3 install --no-cache-dir -r requirements.txt
-COPY ./src/api .
+RUN mkdir /anvil
 
 # Create a group and user
 RUN addgroup -S anvil && \
     adduser -S anvil -G anvil
 
 # Make sure files/folders needed by the processes are accessable when they run under the anvil user
-RUN chown -R anvil.anvil /srv/anvil/www && \
+RUN chown -R anvil.anvil /anvil && \
     chown -R anvil.anvil /run && \
     chown -R anvil.anvil /var/log/php7 && \
     chown -R anvil.anvil /var/log/nginx && \
@@ -60,12 +47,35 @@ RUN chown -R anvil.anvil /srv/anvil/www && \
 
 # Switch to use a non-root user from here on
 USER anvil
-WORKDIR /home/anvil
+WORKDIR /anvil
+
+# Install dependencies
+COPY --chown=anvil:anvil composer.json composer.json
+RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader --no-cache
+
+# Copy the compiled js and css into the container
+COPY --chown=anvil:anvil --from=build-assets /app/public/js /anvil/public/js
+COPY --chown=anvil:anvil --from=build-assets /app/public/css /anvil/public/css
+
+# Copy the environment template
+COPY --chown=anvil:anvil ./.env.deploy ./.env
+
+# Copy the init script
+COPY --chown=anvil:anvil ./resources/serve/init.sh ./
+RUN chmod +x ./init.sh
+
+# Copy codebase
+COPY --chown=anvil:anvil . ./
+
+# Finish composer
+#RUN composer dump-autoload --no-scripts --no-dev --optimize
+RUN composer install --no-dev --no-cache
 
 # Expose the application
+WORKDIR /home/anvil
 EXPOSE 8080
-VOLUME /home/anvil/
-VOLUME /srv/anvil/appdata
+VOLUME /home/anvil
+VOLUME /anvil/storage
 
 # Run the init script on startup
 CMD ["/usr/bin/supervisord"]
