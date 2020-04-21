@@ -7,24 +7,17 @@
                     <div class="flex items-center justify-between h-16">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
+                                <router-link to="/">
                                 <img class="block lg:hidden h-10 w-auto" src="/img/hammer.svg" alt="Anvil" />
-                                <img class="hidden lg:block h-12 w-auto" src="/img/hammer.svg" alt="Anvil" />
+                                <img class="hidden lg:block h-12 w-auto" src="/img/logo.svg" alt="Anvil" />
+                                </router-link>
                             </div>
                             <div class="hidden md:block">
                                 <div class="ml-10 flex items-baseline">
-                                    <router-link to="/" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-brand-900 focus:outline-none focus:text-white focus:bg-brand-700">Server</router-link>
-                                    <router-link to="/site" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Site</router-link>
-                                    <router-link to="/about" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</router-link>
+                                    <router-link to="/" exact-active-class="text-white bg-brand-900" class="px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Server</router-link>
+                                    <router-link to="/site" active-class="text-white bg-brand-900"  class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Site</router-link>
+                                    <router-link to="/about" active-class="text-white bg-brand-900" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</router-link>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="hidden md:block">
-                            <div class="ml-4 flex items-center md:ml-6">
-                                <button class="p-1 border-2 border-transparent text-brand-400 rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-brand-700" aria-label="Notifications">
-                                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                    </svg>
-                                </button>
                             </div>
                         </div>
                         <div class="-mr-2 flex md:hidden">
@@ -43,9 +36,9 @@
 
                 <div :class="[menuOpen ? 'block' : 'hidden']" class="md:hidden">
                     <div class="px-2 pt-2 pb-3 sm:px-3">
-                        <router-link to="/" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-brand-900 focus:outline-none focus:text-white focus:bg-brand-700">Site Details</router-link>
-                        <router-link to="/site" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Site</router-link>
-                        <router-link to="/about" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</router-link>
+                        <router-link to="/" exact-active-class="text-white bg-brand-900" class="block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Server</router-link>
+                        <router-link to="/site" exact-active-class="text-white bg-brand-900" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Site</router-link>
+                        <router-link to="/about" exact-active-class="text-white bg-brand-900" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</router-link>
                     </div>
                 </div>
             </nav>

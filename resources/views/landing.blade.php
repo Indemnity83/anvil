@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{csrf_token()}}">
     <title>Anvil</title>
-    {{--TODO: Get this working with mix()--}}
     <link href="/css/app.css" rel="stylesheet">
+    <link href="/img/hammer.svg" rel="icon" type="image/svg+xml" >
 </head>
 <body>
 <div id="app">
     <app></app>
 </div>
-{{--TODO: Get this working with mix()--}}
 <script src="/js/bootstrap.js"></script>
 <script src="/js/app.js"></script>
 </body>

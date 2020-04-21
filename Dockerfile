@@ -68,8 +68,7 @@ RUN chmod +x ./init.sh
 COPY --chown=anvil:anvil . ./
 
 # Finish composer
-#RUN composer dump-autoload --no-scripts --no-dev --optimize
-RUN composer install --no-dev --no-cache
+RUN composer dump-autoload
 
 # Expose the application
 WORKDIR /home/anvil
