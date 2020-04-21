@@ -12,8 +12,9 @@
               </div>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline">
-                  <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-brand-900 focus:outline-none focus:text-white focus:bg-brand-700">Site Details</a>
-                  <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</a>
+                  <router-link to="/" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-brand-900 focus:outline-none focus:text-white focus:bg-brand-700">Server</router-link>
+                  <router-link to="/site" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Site</router-link>
+                  <router-link to="/about" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</router-link>
                 </div>
               </div>
             </div>
@@ -42,8 +43,9 @@
 
         <div :class="[menuOpen ? 'block' : 'hidden']" class="md:hidden">
           <div class="px-2 pt-2 pb-3 sm:px-3">
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-brand-900 focus:outline-none focus:text-white focus:bg-brand-700">Dashboard</a>
-            <a href="#" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Team</a>            
+            <router-link to="/" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-brand-900 focus:outline-none focus:text-white focus:bg-brand-700">Site Details</router-link>
+            <router-link to="/site" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">Site</router-link>
+            <router-link to="/about" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-brand-300 hover:text-white hover:bg-brand-700 focus:outline-none focus:text-white focus:bg-brand-700">About</router-link>
           </div>
         </div>
       </nav>
