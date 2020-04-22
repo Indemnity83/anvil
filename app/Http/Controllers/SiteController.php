@@ -31,8 +31,8 @@ class SiteController extends Controller
     {
         $validated = $this->validate($request, [
             'name' => ['required', 'unique:sites'],
-            'port' => ['required', 'unique:sites', 'integer', 'min:1025'],
-            'directory' => ['required'],
+            'port' => ['required', 'integer', 'min:1025'],
+            'directory' => ['required', 'starts_with:/'],
         ]);
 
         $site = Site::create($validated);
