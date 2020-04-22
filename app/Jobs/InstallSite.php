@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class InstallSite implements ShouldQueue
 {
@@ -36,8 +38,33 @@ class InstallSite implements ShouldQueue
      */
     public function handle()
     {
-        mkdir($this->site->path, 0775, true);
+        try {
+            $index = view('nginx.index', ['site' => $this->site])->render();
+            Storage::disk('sites')->put($this->site->name.$this->site->directory.'\index.php', $index);
+        } catch (\Throwable $e) {
+            // TODO Handle errors when writing nginx config fails
+        }
 
-        $this->site->setStatus(Status::Installed);
+        Log::info('Generating Config: '.$this->site->name);
+        try {
+            $config = view('nginx.config', ['site' => $this->site])->render();
+            Storage::disk('nginx')->put($this->site->name.'.conf', $config);
+        } catch (\Throwable $e) {
+            // TODO Handle errors when writing nginx config fails
+        }
+
+        Log::info('Testing Nginx Configuration');
+        exec('nginx -t', $output, $exitCode);
+        if ($exitCode !== 0) {
+            // TODO Revert changes if nginx test fails
+        }
+
+        Log::info('Reloading Nginx');
+        exec('nginx -s reload', $output, $exitCode);
+        if ($exitCode !== 0) {
+            // TODO Rrevert changes if nginx reload fails
+        }
+
+        $this->site->updateStatus(Status::Installed);
     }
 }

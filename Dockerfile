@@ -50,6 +50,7 @@ USER anvil
 WORKDIR /anvil
 
 # Install dependencies
+# TODO pull composer install into dedicated image similar to npm
 COPY --chown=anvil:anvil composer.json composer.json
 RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader --no-cache
 
@@ -71,9 +72,8 @@ COPY --chown=anvil:anvil . ./
 RUN composer dump-autoload
 
 # Expose the application
-WORKDIR /home/anvil
-EXPOSE 8080
-VOLUME /home/anvil
+EXPOSE 8080-8100
+EXPOSE 8888
 VOLUME /anvil/storage
 
 # Run the init script on startup

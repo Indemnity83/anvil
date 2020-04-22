@@ -3,10 +3,9 @@ VERSION ?= $(shell cat .version)
 IMAGE_NAME = anvil
 IMAGE_ORG = indemnity83
 
-HTTP = 8080
+HTTP = 8080-8100
 MANAGE = 8888
-SITES = `pwd`/build/sites
-APPDATA = `pwd`/build/appdata
+DATA = `pwd`/storage/
 
 # HELP
 # This will output the help for each task
@@ -27,16 +26,17 @@ build: ## Build the container
 build-nc: ## Build the container without caching
 	docker build --build-arg VERSION=$(VERSION) --no-cache -t $(IMAGE_NAME) .
 
-run: ## Run container on port configured in `.env`
-	docker run -it --rm -v $(SITES):/home/anvil/ -v $(APPDATA):/anvil/storage -p ${HTTP}:8080 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
+run: ## Run the container
+	docker run -it --rm -v $(DATA):/anvil/storage -p ${HTTP}:8080-8100 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
 
 up: build run ## Build the container then run it
 
 fresh: build-nc run ## build without cache and run the container
 
-clean: stop ## Stop any running containers and remove the image and build directories
+clean: stop ## Stop any running containers, remove the images, reset the datatabase and remove instance data
 	docker image ls $(IMAGE_NAME) -q | grep -q . && docker rmi $(IMAGE_NAME) || exit 0
-	rm -r build
+	php artisan migrate:fresh
+	rm -r storage/sites storage/nginx
 
 stop: ## Stop a running container
 	docker ps -q --filter "name=$(IMAGE_NAME)" | grep -q . && docker stop "$(IMAGE_NAME)" && docker rm -f "$(IMAGE_NAME)" || exit 0

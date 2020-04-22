@@ -3,9 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
- * @property string path
+ * @property string name
+ * @property string port
+ * @property mixed directory
+ * @property string basePath
+ * @property string webRoot
  */
 class Site extends Model
 {
@@ -20,18 +25,43 @@ class Site extends Model
         'directory',
     ];
 
-    public function getPathAttribute()
+    /**
+     * Returns the sites base path to the sites.
+     *
+     * @return string
+     */
+    public function getBasePathAttribute()
     {
-        $basePath = storage_path('sites');
+        $storagePath = Storage::disk('sites')
+            ->getDriver()
+            ->getAdapter()
+            ->getPathPrefix();
 
-        return $basePath.DIRECTORY_SEPARATOR.$this->name;
+        return $storagePath.$this->name;
     }
 
-    public function setStatus($status)
+    /**
+     * Returns the Nginx web root path.
+     *
+     * @return string
+     */
+    public function getWebRootAttribute()
+    {
+        return $this->basePath.$this->directory;
+    }
+
+    /**
+     * Update the sites status.
+     *
+     * @param $status
+     */
+    public function updateStatus($status)
     {
         Status::validate($status);
 
         $this->status = $status;
         $this->save();
+
+        // TODO broadcast when a sites status is updated
     }
 }

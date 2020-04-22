@@ -43,6 +43,16 @@ return [
 
     'disks' => [
 
+        'nginx' => [
+            'driver' => 'local',
+            'root' => storage_path('nginx'),
+        ],
+
+        'sites' => [
+            'driver' => 'local',
+            'root' => storage_path('sites'),
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
