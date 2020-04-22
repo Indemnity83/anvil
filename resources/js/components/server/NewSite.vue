@@ -92,7 +92,8 @@ export default {
     methods: {
         onSubmit() {
             this.form.post('/api/site')
-                // TODO: Broadcast an event to the application after creating a new site so the site lists can be updated
+                // TODO: Setup notifications
+                // BODY: Need to broadcast that there is a new site so the site lists can be updated
                 .then(response => alert('Wahoo!'))
         },
     },

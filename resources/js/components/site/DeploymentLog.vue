@@ -38,17 +38,15 @@
           <div class="border-t border-gray-200 pt-1 pb-4 px-4">
 
             <div v-if="isLoading" class="inline-flex items-center justify-center w-full mx-auto pt-6 text-center">
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="spin h-5 w-auto mr-2">
-                <path style="rotate(15)" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-              </svg>
+              <font-awesome-icon :icon="['fas', 'sync-alt']" class="mr-2" spin />
               <p>Loading</p>
             </div>
-            
+
             <div v-else class="mt-2 text-sm leading-5 text-gray-700">
               <label for="script" class="sr-only">Deploy Script</label>
               <div class="mt-1 relative rounded-md shadow-sm">
                 <textarea class="form-input block w-full sm:text-sm sm:leading-5 font-mono bg-gray-100" v-model="deployLog" rows=10 disabled>
-                  
+
                 </textarea>
               </div>
             </div>
@@ -60,7 +58,7 @@
             </div>
 
           </div>
-          
+
         </div>
       </transition>
     </div>

@@ -11,10 +11,10 @@
     <div class="border-t border-gray-200 px-4 py-4 sm:px-6 bg-gray-100">
 
       <div v-if="isInstalling" class="inline-flex items-center justify-center w-full mx-auto py-20 text-center text-2xl">
-        <p>Installing Repository</p>
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="spin h-6 w-auto ml-2">
-          <path style="rotate(15)" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-        </svg>
+          <p>
+              <font-awesome-icon v-if="isDeploying" :icon="['fas', 'sync-alt']" class="mr-2" spin />
+              Installing Repository
+          </p>
       </div>
 
       <div v-else class="mt-5">
@@ -71,10 +71,10 @@
           <div class="sm:flex sm:items-center mt-5">
             <button @click="install" type="button" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
               Install Repository
-            </button>            
+            </button>
           </div>
         </form>
-        
+
       </div>
 
       </div>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PortalVue from 'portal-vue'
+import './font-awesome'
 
 Vue.use(VueRouter)
 Vue.use(PortalVue)

@@ -8,17 +8,9 @@
           Deployment
         </h3>
         <span class="inline-flex rounded-md shadow-sm">
-
-
-          <button v-if="isDeploying" @click="deployNow" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-300">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="spin h-5 w-auto mr-2">
-              <path style="rotate(15)" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            Deploy Now
-          </button>
-
-          <button v-else @click="deployNow" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
-            Deploy Now
+          <button @click="deployNow" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
+              <font-awesome-icon v-if="isDeploying" :icon="['fas', 'sync-alt']" class="mr-2" spin />
+              Deploy Now
           </button>
         </span>
       </div>
