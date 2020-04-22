@@ -1,3 +1,4 @@
+/.git
 /.idea
 /node_modules
 /public/hot
@@ -6,11 +7,13 @@
 /public/css
 /public/mix-manifest.json
 /storage/*.key
+/storage/framework/cache/**
+/storage/framework/sessions/**
+/storage/framework/views/**
 /vendor
 /build
 .env
 .env.backup
-.php_cs.cache
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
