@@ -15,17 +15,17 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            name: 'Server',
+            name: 'server',
             component: Server,
         },
         {
-            path: '/site',
-            name: 'Site',
+            path: '/sites/:id',
+            name: 'site',
             component: Site,
         },
         {
             path: '/about',
-            name: 'About',
+            name: 'about',
             component: About,
         },
     ],

@@ -28,7 +28,7 @@ build-nc: ## Build the container without caching
 	docker build --build-arg VERSION=$(VERSION) --no-cache -t $(IMAGE_NAME) .
 
 run: ## Run container on port configured in `.env`
-	docker run -it --rm -v $(SITES):/home/anvil/ -v $(APPDATA):/anvil/storage -p $(HTTP):8080 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
+	docker run -it --rm -v $(SITES):/home/anvil/ -v $(APPDATA):/anvil/storage -p ${HTTP}:8080 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
 
 up: build run ## Build the container then run it
 
