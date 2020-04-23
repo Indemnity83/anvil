@@ -110,7 +110,6 @@ class Form {
                     resolve(response.data);
                 })
                 .catch(error => {
-                    console.log(error);
                     this.onFail(error);
 
                     reject(error);

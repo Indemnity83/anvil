@@ -21,7 +21,6 @@ class Errors {
      * Determine if we have any errors.
      */
     any() {
-        console.log(this.errors);
         return Object.keys(this.errors).length > 0;
     }
 
@@ -32,7 +31,6 @@ class Errors {
      * @param {string} field
      */
     get(field) {
-        console.log(this.errors[field]);
         if (this.errors[field]) {
             return this.errors[field][0];
         }
