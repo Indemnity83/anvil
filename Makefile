@@ -5,12 +5,12 @@ IMAGE_ORG = indemnity83
 
 HTTP = 8080-8100
 MANAGE = 8888
-DATA = `pwd`/storage/
+DATA = `pwd`/run/
 
 # HELP
 # This will output the help for each task
 # thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-.PHONY: help build
+.PHONY: help run
 
 help: ## This help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -27,7 +27,7 @@ build-nc: ## Build the container without caching
 	docker build --build-arg VERSION=$(VERSION) --no-cache -t $(IMAGE_NAME) .
 
 run: ## Run the container
-	docker run -it --rm -v $(DATA):/anvil/storage -p ${HTTP}:8080-8100 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
+	docker run -it --rm -v $(DATA):/data -p ${HTTP}:8080-8100 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
 
 up: build run ## Build the container then run it
 
@@ -35,8 +35,7 @@ fresh: build-nc run ## build without cache and run the container
 
 clean: stop ## Stop any running containers, remove the images, reset the datatabase and remove instance data
 	docker image ls $(IMAGE_NAME) -q | grep -q . && docker rmi $(IMAGE_NAME) || exit 0
-	php artisan migrate:fresh
-	rm -r storage/sites storage/nginx
+	if [ -d run ]; then rm -r run; fi
 
 stop: ## Stop a running container
 	docker ps -q --filter "name=$(IMAGE_NAME)" | grep -q . && docker stop "$(IMAGE_NAME)" && docker rm -f "$(IMAGE_NAME)" || exit 0

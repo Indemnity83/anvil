@@ -6,11 +6,16 @@ COPY resources/js ./resources/js
 COPY resources/css ./resources/css
 RUN npm run production
 
+FROM composer:latest as build-vendor
+WORKDIR /app
+COPY composer.* ./
+RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader --no-cache
+
 FROM alpine
 LABEL maintainer="Kyle Klaus <kklaus@indemnity83.com>"
 
 ARG VERSION
-ENV ANVIL_VERSION = $VERSION
+ENV ANVIL_VERSION=$VERSION
 ENV UPLOAD_LIMIT=5M
 
 # Install packages
@@ -20,61 +25,39 @@ RUN apk --no-cache add git composer nginx supervisor npm \
     php7-simplexml php7-pdo php7-sqlite3 php7-pdo_sqlite php7-exif php7-pdo_mysql \
     php7-pdo_pgsql php7-pdo_odbc php7-dom php7-xmlwriter php7-tokenizer
 
-# Configure NGINX
-COPY resources/serve/nginx.conf /etc/nginx/nginx.conf
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Configure PHP-FPM
-COPY resources/serve/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
-COPY resources/serve/php.ini /etc/php7/conf.d/custom.ini
-
-# Configure supervisord
-COPY resources/serve/supervisord.conf /etc/supervisord.conf
-
-# Make the application data folder
-RUN mkdir /anvil
+# Copy configurations
+COPY docker/rootfs /
 
 # Create a group and user
 RUN addgroup -S anvil && \
     adduser -S anvil -G anvil
 
 # Make sure files/folders needed by the processes are accessable when they run under the anvil user
-RUN chown -R anvil.anvil /anvil && \
-    chown -R anvil.anvil /run && \
+RUN chown -R anvil.anvil /run && \
     chown -R anvil.anvil /var/log/php7 && \
     chown -R anvil.anvil /var/log/nginx && \
     chmod 0751 /var/lib/nginx
 
+# Publish data volume (linked to application storage)
+RUN ln -s /home/anvil/storage /data
+VOLUME /data
+
+## Copy the application
+COPY --chown=anvil:anvil . /home/anvil
+COPY --chown=anvil:anvil --from=build-vendor /app/vendor /home/anvil/vendor
+COPY --chown=anvil:anvil --from=build-assets /app/public /home/anvil/public
+COPY --chown=anvil:anvil .env.docker /home/anvil/.env
+
 # Switch to use a non-root user from here on
 USER anvil
-WORKDIR /anvil
-
-# Install dependencies
-# TODO pull composer install into dedicated image similar to npm
-COPY --chown=anvil:anvil composer.json composer.json
-RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader --no-cache
-
-# Copy the compiled js and css into the container
-COPY --chown=anvil:anvil --from=build-assets /app/public/js /anvil/public/js
-COPY --chown=anvil:anvil --from=build-assets /app/public/css /anvil/public/css
-
-# Copy the environment template
-COPY --chown=anvil:anvil ./.env.deploy ./.env
-
-# Copy the init script
-COPY --chown=anvil:anvil ./resources/serve/init.sh ./
-RUN chmod +x ./init.sh
-
-# Copy codebase
-COPY --chown=anvil:anvil . ./
+WORKDIR /home/anvil
 
 # Finish composer
-RUN composer dump-autoload
+RUN composer dump-autoload --quiet
 
 # Expose the application
 EXPOSE 8080-8100
 EXPOSE 8888
-VOLUME /anvil/storage
 
 # Run the init script on startup
 CMD ["/usr/bin/supervisord"]

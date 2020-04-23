@@ -1,18 +1,24 @@
-/.idea
-/node_modules
-/public/hot
-/public/storage
-/public/js
-/public/css
-/public/mix-manifest.json
-/storage/*.key
-/vendor
-/build
+# Runtime caches & logs
+public/storage
+
+# Docker stuff
+run
+
+# Development & Config
+.idea
 .env
 .env.backup
 .php_cs.cache
 .phpunit.result.cache
-Homestead.json
-Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+# Composer assets
+vendor
+
+# NPM assets
+node_modules
+public/css
+public/js
+public/hot
+public/mix-manifest.json
