@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\SiteStatusUpdated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string name
  * @property string port
  * @property mixed directory
+ * @property string status
  * @property string basePath
  * @property string webRoot
  */
@@ -62,6 +64,6 @@ class Site extends Model
         $this->status = $status;
         $this->save();
 
-        // TODO broadcast when a sites status is updated
+        broadcast(new SiteStatusUpdated($this));
     }
 }

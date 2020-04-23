@@ -24,7 +24,7 @@
             </tr>
             </thead>
             <tbody class="bg-white">
-            <tr v-for="site in sites" class="hover:bg-blue-50">
+            <tr v-for="site in sites" class="hover:bg-blue-50" :key="site.id">
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-brand-400">
                     <router-link :to="'sites/' + site.id" class="hover:text-brand-600 hover:underline flex items-center">
                         <font-awesome-icon v-if="site.status === 'installing'" :icon="['fas', 'sync-alt']" class="mr-2" spin />
@@ -54,19 +54,6 @@
 <script>
     export default {
         name: 'ActiveSites',
-        data() {
-            return {
-                sites: [],
-            }
-        },
-        methods: {
-            getSites() {
-                axios.get('/api/site')
-                    .then(response => this.sites = response.data)
-            },
-        },
-        created() {
-            this.getSites();
-        }
+        props: ['sites'],
     };
 </script>

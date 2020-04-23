@@ -48,7 +48,7 @@
                 </div>
                 <div class="flex-1">
                     <new-site class="mb-8"></new-site>
-                    <active-sites class="mb-8"></active-sites>
+                    <active-sites :sites="sites" class="mb-8"></active-sites>
                 </div>
             </div>
         </main>
@@ -65,5 +65,31 @@
             NewSite,
             ActiveSites,
         },
+        data() {
+            return {
+                sites: [],
+            }
+        },
+        methods: {
+            getSites() {
+                axios.get('/api/site')
+                    .then(response => this.sites = response.data)
+            },
+        },
+        created() {
+            this.getSites();
+
+            this.$on('SiteAdded', function(site){
+                this.sites.push(site)
+            });
+
+            Echo.channel('sites')
+                .listen('SiteStatusUpdated', (e) => {
+                    this.sites.splice(_.findIndex(this.sites, ['id', e.site.id]), 1, e.site)
+                })
+                .listen('SiteAdded', (e) => {
+                    this.sites.push(e.site)
+                });
+        }
     };
 </script>

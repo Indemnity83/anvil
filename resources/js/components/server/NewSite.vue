@@ -42,9 +42,6 @@
                     <p v-show="form.errors.has('port')" class="mt-1 text-sm text-red-600" id="port-error">
                         {{ form.errors.get('port') }}
                     </p>
-                    <p class="mt-1 text-sm text-gray-800">
-                        make sure you expose this port using <code class="bg-gray-300 px-2">-p &lt;port&gt;:{{ form.port }}</code>
-                    </p>
                 </div>
             </div>
 
@@ -85,6 +82,7 @@ export default {
             form: new Form({
                 name: '',
                 port: 8080,
+                default: true,
                 directory: '/public',
             }),
         }
@@ -92,9 +90,9 @@ export default {
     methods: {
         onSubmit() {
             this.form.post('/api/site')
-                // TODO: Setup notifications
-                // BODY: Need to broadcast that there is a new site so the site lists can be updated
-                .then(response => alert('Wahoo!'))
+                .then(response => {
+                    this.$parent.$emit('SiteAdded', response)
+                })
         },
     },
 };

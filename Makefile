@@ -3,9 +3,10 @@ VERSION ?= $(shell cat .version)
 IMAGE_NAME = anvil
 IMAGE_ORG = indemnity83
 
-HTTP = 8080-8100
-MANAGE = 8888
-DATA = `pwd`/run/
+MANAGE_PORT=8888
+WEBSOCKET_PORT=6001
+HTTP_PORTS=8080-8100
+DATA=`pwd`/run/
 
 # HELP
 # This will output the help for each task
@@ -27,7 +28,7 @@ build-nc: ## Build the container without caching
 	docker build --build-arg VERSION=$(VERSION) --no-cache -t $(IMAGE_NAME) .
 
 run: ## Run the container
-	docker run -it --rm -v $(DATA):/data -p ${HTTP}:8080-8100 -p ${MANAGE}:8888 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
+	docker run -it --rm -v $(DATA):/data -p ${HTTP_PORTS}:8080-8100 -p ${MANAGE_PORT}:8888 -p${WEBSOCKET_PORT}:6001 --name "$(IMAGE_NAME)" $(IMAGE_NAME)
 
 up: build run ## Build the container then run it
 

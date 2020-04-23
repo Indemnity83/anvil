@@ -4,6 +4,7 @@ COPY package*.json tailwind.config.js webpack.mix.js ./
 RUN npm install
 COPY resources/js ./resources/js
 COPY resources/css ./resources/css
+COPY .env.docker .env
 RUN npm run production
 
 FROM composer:latest as build-vendor
@@ -56,8 +57,9 @@ WORKDIR /home/anvil
 RUN composer dump-autoload --quiet
 
 # Expose the application
-EXPOSE 8080-8100
 EXPOSE 8888
+EXPOSE 6001
+EXPOSE 8080-8100
 
 # Run the init script on startup
 CMD ["/usr/bin/supervisord"]
