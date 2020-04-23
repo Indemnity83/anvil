@@ -34,9 +34,11 @@ up: build run ## Build the container then run it
 
 fresh: build-nc run ## build without cache and run the container
 
-clean: stop ## Stop any running containers, remove the images, reset the datatabase and remove instance data
-	docker image ls $(IMAGE_NAME) -q | grep -q . && docker rmi $(IMAGE_NAME) || exit 0
+clean: stop ## Stop running containers and clear the volume
 	if [ -d run ]; then rm -r run; fi
+
+purge: clean ## Stop any running containers, remove the images, reset the datatabase and remove instance data
+	docker image ls $(IMAGE_NAME) -q | grep -q . && docker rmi $(IMAGE_NAME) || exit 0
 
 stop: ## Stop a running container
 	docker ps -q --filter "name=$(IMAGE_NAME)" | grep -q . && docker stop "$(IMAGE_NAME)" && docker rm -f "$(IMAGE_NAME)" || exit 0
