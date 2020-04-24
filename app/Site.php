@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Storage;
  * @property string port
  * @property mixed directory
  * @property string status
- * @property string basePath
- * @property string webRoot
+ * @property string base_path
+ * @property string web_root
  */
 class Site extends Model
 {
@@ -49,7 +49,7 @@ class Site extends Model
      */
     public function getWebRootAttribute()
     {
-        return $this->basePath.$this->directory;
+        return $this->base_path.$this->directory;
     }
 
     /**

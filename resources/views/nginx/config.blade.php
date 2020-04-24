@@ -1,7 +1,7 @@
 server {
     listen {{ $site->port }};
     server_name {{ $site->name }};
-    root {{ $site->webRoot }};
+    root {{ $site->web_root }};
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
