@@ -2,10 +2,19 @@
     <!-- eslint-disable -->
     <div class="home">
         <header>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:flex justify-between items-center">
                 <h2 class="text-2xl font-bold leading-tight text-gray-900">
                     Site Details
                 </h2>
+                <div class="text-lg uppercase tracking-wide font-light text-gray-700 my-2">
+                    <span>{{ site.name }}</span>
+                    <span class="ml-5">port {{ site.port }}</span>
+                    <span class="ml-5">
+                        Active
+                        <font-awesome-icon v-if="site.status === 'installing'" :icon="['fas', 'circle-notch']" class="text-success-600 text-base" spin />
+                        <font-awesome-icon v-if="site.status === 'installed'" :icon="['far', 'check-circle']" class="text-success-600 text-base" ></font-awesome-icon>
+                    </span>
+                </div>
             </div>
         </header>
         <main class="mt-6">
@@ -55,7 +64,26 @@
                     </nav>
                 </div>
                 <div class="flex-1">
-                    <div v-if="status.is_deployed">
+
+                    <div class="bg-gray-100 overflow-hidden rounded-lg" v-if="site.repository_status === 'installing'">
+                        <div class="px-4 my-8 sm:p-6">
+                            <p class="text-center text-gray-700 text-xl">
+                                <font-awesome-icon :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                                Installing Repository
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-100 overflow-hidden rounded-lg" v-if="site.repository_status === 'uninstalling'">
+                        <div class="px-4 my-8 sm:p-6">
+                            <p class="text-center text-gray-700 text-xl">
+                                <font-awesome-icon :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                                Uninstalling Repository
+                            </p>
+                        </div>
+                    </div>
+
+                    <div v-if="site.repository_status === 'installed'">
                         <deployment class="mb-8"></deployment>
                         <deploy-script class="mb-8"></deploy-script>
                         <!-- <deploy-trigger class="mb-8"></deploy-trigger> -->
@@ -63,11 +91,11 @@
                         <maintenance-mode class="mb-8"></maintenance-mode>
                         <!-- <deploy-branch class="mb-8"></deploy-branch> -->
                         <!-- <git-remote class="mb-8"></git-remote> -->
-                        <uninstall class="mb-8"></uninstall>
+                        <uninstall :site="site" class="mb-8"></uninstall>
                     </div>
 
                     <div v-else>
-                        <install-repository class="mb-8"></install-repository>
+                        <install-repository :site="site" class="mb-8" v-if="site.repository_status === null"></install-repository>
                     </div>
                 </div>
             </div>
@@ -91,6 +119,7 @@
 
     export default {
         name: 'Site',
+        props: ['siteId'],
         components: {
             InstallRepository,
             Deployment,
@@ -104,26 +133,29 @@
         },
         data() {
             return {
-                status: {
-                    is_deployed: null,
-                },
-            };
+                site: [],
+            }
         },
         methods: {
-            getStatus() {
-                const path = '/api';
-                axios.get(path)
-                    .then((res) => {
-                        this.status = res.data;
-                    })
-                    .catch((error) => {
-                        // eslint-disable-next-line
-                        console.error(error);
-                    });
+            getSite() {
+                axios.get(`/api/site/${this.siteId}`)
+                    .then(response => this.site = response.data)
             },
         },
-        created() {
-            this.getStatus();
+        mounted() {
+            this.getSite();
+
+            this.$on('SiteUpdated', function(site) {
+                console.log(site)
+                this.site = site
+            });
+
+            Echo.channel('sites')
+                .listen('SiteUpdated', (e) => {
+                    if (e.site.id === this.site.id) {
+                        this.site = e.site
+                    }
+                });
         },
     };
 </script>

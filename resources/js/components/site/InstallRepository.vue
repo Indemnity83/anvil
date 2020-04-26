@@ -9,67 +9,57 @@
     </div>
 
     <div class="border-t border-gray-200 px-4 py-4 sm:px-6 bg-gray-100">
-
-      <div v-if="isInstalling" class="inline-flex items-center justify-center w-full mx-auto py-20 text-center text-2xl">
-          <p>
-              <font-awesome-icon v-if="isDeploying" :icon="['fas', 'sync-alt']" class="mr-2" spin />
-              Installing Repository
-          </p>
-      </div>
-
-      <div v-else class="mt-5">
-        <form class="w-full">
+      <div class="mt-5">
+        <form class="w-full" @submit.prevent="onSubmit()">
           <div class="sm:flex mt-2 mb-6">
             <label class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Provider</label>
             <div class="flex-1 max-w-lg">
               <div class="">
                 <div class="flex items-center">
-                  <input id="github" v-model="form.location" value="github" type="radio" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
+                  <input id="github" v-model="form.provider" value="github" type="radio" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
                   <label for="github" class="ml-3">
                     <span class="block text-sm leading-5 font-medium text-gray-700">Github</span>
                   </label>
                 </div>
                 <div class="mt-2 flex items-center">
-                  <input v-model="form.location" id="custom" value="custom" type="radio" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
+                  <input v-model="form.provider" id="custom" value="custom" type="radio" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" />
                   <label for="custom" class="ml-3">
                     <span class="block text-sm leading-5 font-medium text-gray-700">Custom</span>
                   </label>
                 </div>
+                  <p v-show="form.errors.has('provider')" class="mt-1 text-sm text-red-600" id="provider-error">
+                      {{ form.errors.get('provider') }}
+                  </p>
               </div>
             </div>
           </div>
 
-
-          <div class="sm:flex sm:items-center mt-6">
-            <label for="repo" class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Repository</label>
-            <div class="flex-1 mt-1 max-w-lg relative rounded-md shadow-sm">
-              <input id="repo" type="text" class="form-input block w-full sm:text-sm sm:leading-5" placeholder="larave/laravel" v-model="form.repository"/>
+            <div class="sm:flex sm:items-center mt-6">
+                <label for="repository" class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Repository</label>
+                <div class="flex-1">
+                    <div class="flex-1 mt-1 max-w-lg relative rounded-md shadow-sm">
+                        <input id="repository" type="text" class="form-input block w-full sm:text-sm sm:leading-5" :placeholder="repoPlaceholder" v-model="form.repository" :class="{'border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red': form.errors.has('repository')}"/>
+                    </div>
+                    <p v-show="form.errors.has('repository')" class="mt-1 text-sm text-red-600" id="repository-error">
+                        {{ form.errors.get('repository') }}
+                    </p>
+                </div>
             </div>
-          </div>
 
-
-          <div class="sm:flex sm:items-center mt-4">
-            <label for="branch" class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Branch</label>
-            <div class="flex-1 mt-1 max-w-lg relative rounded-md shadow-sm">
-              <input id="branch" type="text" class="form-input block w-full sm:text-sm sm:leading-5" v-model="form.branch" />
+            <div class="sm:flex sm:items-center mt-6">
+                <label for="branch" class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Repository</label>
+                <div class="flex-1">
+                    <div class="flex-1 mt-1 max-w-lg relative rounded-md shadow-sm">
+                        <input id="branch" type="text" class="form-input block w-full sm:text-sm sm:leading-5" placeholder="master" v-model="form.branch" :class="{'border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red': form.errors.has('branch')}"/>
+                    </div>
+                    <p v-show="form.errors.has('branch')" class="mt-1 text-sm text-red-600" id="branch-error">
+                        {{ form.errors.get('branch') }}
+                    </p>
+                </div>
             </div>
-          </div>
-
-
-          <div class="sm:flex sm:items-center mt-4">
-            <label class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Installation Options</label>
-            <div class="relative flex items-start">
-              <div class="absolute flex items-center h-8">
-                <input id="dependencies" type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" v-model="form.dependencies"/>
-              </div>
-              <div class="pl-7 text-sm leading-8">
-                <label for="dependencies" class="font-medium text-gray-700">Install Composer Dependencies</label>
-              </div>
-            </div>
-          </div>
 
           <div class="sm:flex sm:items-center mt-5">
-            <button @click="install" type="button" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
+            <button type="submit" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
               Install Repository
             </button>
           </div>
@@ -82,38 +72,32 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Form from "../../form";
 
 export default {
-  name: 'InstallRepository',
-  data() {
-    return {
-      isInstalling: false,
-      form: {
-        repository: '',
-        branch: 'master',
-        location: 'github',
-        dependencies: true,
-      },
-    };
-  },
-  methods: {
-    install() {
-      this.isInstalling = true;
-      const path = '/api/install';
-      axios.post(path, this.form)
-        .then((res) => {
-          // eslint-disable-next-line
-          console.log(res.data);
-          // TODO: watch the server for when the install is done instead of waiting and refreshing
-          this.$router.go(0);
-        })
-        .catch((error) => {
-          this.isInstalling = false;
-          // eslint-disable-next-line
-          console.error(error);
-        });
+    name: 'InstallRepository',
+    props: ['site'],
+    data() {
+        return {
+            form: new Form({
+                provider: 'github',
+                repository: '',
+                branch: 'master',
+            }),
+        };
     },
-  },
+    methods: {
+        onSubmit() {
+            this.form.post(`/api/site/${this.site.id}/git`)
+            .then(response => {
+                this.$parent.$emit('SiteUpdated', response)
+            })
+        },
+    },
+    computed: {
+        repoPlaceholder: function() {
+            return this.form.provider === 'custom' ? 'git@provider.com:user/repository.git' : 'larave/laravel'
+        }
+    }
 };
 </script>

@@ -84,7 +84,7 @@
             });
 
             Echo.channel('sites')
-                .listen('SiteStatusUpdated', (e) => {
+                .listen('SiteUpdated', (e) => {
                     this.sites.splice(_.findIndex(this.sites, ['id', e.site.id]), 1, e.site)
                 })
                 .listen('SiteAdded', (e) => {

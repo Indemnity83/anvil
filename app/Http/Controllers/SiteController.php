@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Events\SiteAdded;
-use App\Jobs\InstallSite;
+use App\Jobs\SiteInstall;
 use App\Site;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
 
 class SiteController extends Controller
@@ -39,7 +40,7 @@ class SiteController extends Controller
         $site = Site::create($validated);
         broadcast(new SiteAdded($site))->toOthers();
 
-        $this->dispatch(new InstallSite($site));
+        $this->dispatch(new SiteInstall($site));
 
         // TODO implement a full api resource for models
         return response()->json($site->fresh());
@@ -53,7 +54,7 @@ class SiteController extends Controller
      */
     public function show(Site $site)
     {
-        //
+        return response()->json($site);
     }
 
     /**

@@ -20,9 +20,10 @@ const router = new VueRouter({
             component: Server,
         },
         {
-            path: '/sites/:id',
+            path: '/sites/:siteId',
             name: 'site',
             component: Site,
+            props: true,
         },
         {
             path: '/about',
