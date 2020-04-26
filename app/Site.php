@@ -130,7 +130,7 @@ class Site extends Model
     }
 
     /**
-     * Make a .env file if possible and one doesn't exist already
+     * Make a .env file if possible and one doesn't exist already.
      * @return bool
      */
     public function makeEnvironmentFile()
