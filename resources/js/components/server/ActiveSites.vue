@@ -35,11 +35,21 @@
                     {{ site.port }}
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-700">
-                    <span v-if="site.app" class="flex items-center">
-                        <font-awesome-icon v-if="site.repository_provider === 'github'" :icon="['fab', 'github']" class="mr-2" /> indemnity83/anvil{{ site.repository }}
+                    <span v-if="site.repository_status === 'installing'" class="flex items-center">
+                        <font-awesome-icon :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                        Installing
                     </span>
 
-                    <span v-else class="flex items-center">
+                    <span v-if="site.repository_status === 'uninstalling'" class="flex items-center">
+                        <font-awesome-icon :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                        Uninstalling
+                    </span>
+
+                    <span v-if="site.repository_status === 'installed'" class="flex items-center">
+                        <font-awesome-icon v-if="site.repository_provider === 'github'" :icon="['fab', 'github']" class="mr-2" /> {{ site.repository }}
+                    </span>
+
+                    <span v-if="site.repository_status === null" class="flex items-center">
                         <font-awesome-icon :icon="['far', 'times-circle']" class="mr-2" /> None
                     </span>
                 </td>
