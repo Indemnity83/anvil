@@ -41,7 +41,7 @@ class RepoInstall implements ShouldQueue
         $this->site->cleanDirectory();
 
         // Git clone the repo
-        shell_exec("git clone {$this->site->repository} {$this->site->path}");
+        shell_exec("git clone -b {$this->site->repository_branch} {$this->site->repository} {$this->site->path}");
 
         // Setup environment file with some sensible defaults
         if ($this->site->makeEnvironmentFile()) {
