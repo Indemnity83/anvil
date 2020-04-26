@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string repository_provider
  * @property string repository_branch
  * @property string repository_status
+ * @property string deploy_script
  */
 class Site extends Model
 {

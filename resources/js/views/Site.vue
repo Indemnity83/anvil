@@ -85,7 +85,7 @@
 
                     <div v-if="site.repository_status === 'installed'">
                         <deployment class="mb-8"></deployment>
-                        <deploy-script class="mb-8"></deploy-script>
+                        <deploy-script :site="site" class="mb-8"></deploy-script>
                         <!-- <deploy-trigger class="mb-8"></deploy-trigger> -->
                         <!-- <deploy-webhooks class="mb-8"></deploy-webhooks> -->
                         <maintenance-mode class="mb-8"></maintenance-mode>

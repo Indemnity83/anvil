@@ -34,6 +34,7 @@ class RepoInstall implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function handle()
     {
@@ -54,6 +55,9 @@ class RepoInstall implements ShouldQueue
 
         // Touch database.sqlite in the standard location
         touch("{$this->site->path}/database/database.sqlite");
+
+        // Setup default deploy script
+        $this->site->deploy_script = view('deploy-script.default', ['site' => $this->site])->render();
 
         // Update site's repository_status to installed
         $this->site->repository_status = 'installed';
