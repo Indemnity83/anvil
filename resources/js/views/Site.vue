@@ -89,8 +89,8 @@
                         <!-- <deploy-trigger class="mb-8"></deploy-trigger> -->
                         <!-- <deploy-webhooks class="mb-8"></deploy-webhooks> -->
                         <maintenance-mode class="mb-8"></maintenance-mode>
-                        <!-- <deploy-branch class="mb-8"></deploy-branch> -->
-                        <!-- <git-remote class="mb-8"></git-remote> -->
+                        <deploy-branch :site="site" class="mb-8"></deploy-branch>
+                        <git-remote :site="site" class="mb-8"></git-remote>
                         <uninstall :site="site" class="mb-8"></uninstall>
                     </div>
 
@@ -113,8 +113,8 @@
     // import DeployTrigger from '../components/site/DeployTrigger.vue';
     // import DeployWebhooks from '../components/site/DeployWebhooks.vue';
     import MaintenanceMode from '../components/site/MaintenanceMode.vue';
-    // import DeployBranch from '../components/site/DeployBranch.vue';
-    // import GitRemote from '../components/site/GitRemote.vue';
+    import DeployBranch from '../components/site/DeployBranch.vue';
+    import GitRemote from '../components/site/GitRemote.vue';
     import Uninstall from '../components/site/Uninstall.vue';
 
     export default {
@@ -127,8 +127,8 @@
             // DeployTrigger,
             // DeployWebhooks,
             MaintenanceMode,
-            // DeployBranch,
-            // GitRemote,
+            DeployBranch,
+            GitRemote,
             Uninstall,
         },
         data() {

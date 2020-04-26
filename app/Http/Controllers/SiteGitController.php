@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\SiteUpdated;
 use App\Jobs\RepoInstall;
 use App\Jobs\RepoRemove;
+use App\Jobs\RepoUpdated;
 use App\Site;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,7 +41,35 @@ class SiteGitController extends Controller
         dispatch(new RepoInstall($site));
 
         return response()->json($site->fresh());
-        return response()->json($site);
+    }
+
+    /**
+     * Update the git repository information.
+     *
+     * @param Request $request
+     * @param Site $site
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function update(Request $request, Site $site)
+    {
+        $validated = $this->validate($request, [
+            'provider' => ['required_with:repository', 'in:custom'],
+            'repository' => ['sometimes', 'required', 'regex:/(git@|https?:\/\/)([a-zA-Z0-9\.\-_]+)(\/|:)([a-zA-Z0-9\-]+)\/([a-zA-Z0-9\-]+)\.git/'],
+            'branch' => ['sometimes', 'required'],
+        ]);
+
+        $site->repository = $request->get('repository', $site->repository);
+        $site->repository_provider = $request->get('provider', $site->repository_provider);
+        $site->repository_branch = $request->get('branch', $site->repository_branch);
+
+        $site->save();
+
+        broadcast(new SiteUpdated($site))->toOthers();
+
+        dispatch(new RepoUpdated($site));
+
+        return response()->json($site->fresh());
     }
 
     /**
