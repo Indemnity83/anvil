@@ -11,6 +11,7 @@
     <div class="border-t border-gray-200 px-4 py-4 sm:px-6 bg-gray-100">
       <div class="mt-5">
         <form class="w-full" @submit.prevent="onSubmit()">
+            <fieldset :disabled="busy" :class="{'opacity-50': busy}">
           <div class="sm:flex mt-2 mb-6">
             <label class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Provider</label>
             <div class="flex-1 max-w-lg">
@@ -59,10 +60,17 @@
             </div>
 
           <div class="sm:flex sm:items-center mt-5">
-            <button type="submit" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
-              Install Repository
+            <button type="submit" :disabled="busy" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
+                <span v-if="busy">
+                    <font-awesome-icon  :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                    Working...
+                </span>
+                    <span v-else>
+                    Install Repository
+                </span>
             </button>
           </div>
+            </fieldset>
         </form>
 
       </div>
@@ -79,8 +87,9 @@ export default {
     props: ['site'],
     data() {
         return {
+            busy: false,
             form: new Form({
-                provider: 'github',
+                provider: 'custom',
                 repository: '',
                 branch: 'master',
             }),
@@ -88,10 +97,15 @@ export default {
     },
     methods: {
         onSubmit() {
+            this.busy = true
             this.form.post(`/api/site/${this.site.id}/git`)
-            .then(response => {
-                this.$parent.$emit('SiteUpdated', response)
-            })
+                .then(response => {
+                    this.$parent.$emit('SiteUpdated', response)
+                    this.busy = false
+                })
+                .catch(error => {
+                    this.busy = false
+                })
         },
     },
     computed: {

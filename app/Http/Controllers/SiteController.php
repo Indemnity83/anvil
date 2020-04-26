@@ -40,6 +40,11 @@ class SiteController extends Controller
         $site = Site::create($validated);
         broadcast(new SiteAdded($site))->toOthers();
 
+        config(["filesystems.disks.{$site->disk}" => [
+            'driver' => 'local',
+            'root' => storage_path("sites/{$site->name}"),
+        ]]);
+
         $this->dispatch(new SiteInstall($site));
 
         // TODO implement a full api resource for models

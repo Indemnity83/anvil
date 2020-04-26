@@ -16,7 +16,7 @@
 
       <div class="mt-5">
         <form class="w-full" @submit.prevent="onSubmit">
-
+            <fieldset :disabled="busy" :class="{'opacity-50': busy}">
             <div class="sm:flex mt-4">
                 <label for="name" class="mt-3 w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">
                     Root Domain
@@ -60,10 +60,17 @@
             </div>
 
             <div class="sm:flex sm:items-center mt-5">
-                <button type="submit" :disabled="form.busy" class="disabled:opacity-75 sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
-                    Add Site
+                <button type="submit" :disabled="busy" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
+                    <span v-if="busy">
+                        <font-awesome-icon  :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                        Working...
+                    </span>
+                    <span v-else>
+                        Add Site
+                    </span>
                 </button>
             </div>
+            </fieldset>
         </form>
 
       </div>
@@ -79,6 +86,7 @@ export default {
     name: 'NewSite',
     data() {
         return {
+            busy: false,
             form: new Form({
                 name: '',
                 port: 8080,
@@ -89,9 +97,14 @@ export default {
     },
     methods: {
         onSubmit() {
+            this.busy = true
             this.form.post('/api/site')
                 .then(response => {
                     this.$parent.$emit('SiteAdded', response)
+                    this.busy = false
+                })
+                .catch(error => {
+                    this.busy = false
                 })
         },
     },

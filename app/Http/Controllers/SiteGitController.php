@@ -39,6 +39,7 @@ class SiteGitController extends Controller
 
         dispatch(new RepoInstall($site));
 
+        return response()->json($site->fresh());
         return response()->json($site);
     }
 
@@ -61,6 +62,6 @@ class SiteGitController extends Controller
 
         dispatch(new RepoRemove($site));
 
-        return response()->json($site);
+        return response()->json($site->fresh());
     }
 }
