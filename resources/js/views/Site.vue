@@ -9,10 +9,13 @@
                 <div class="text-lg uppercase tracking-wide font-light text-gray-700 my-2">
                     <span>{{ site.name }}</span>
                     <span class="ml-5">port {{ site.port }}</span>
-                    <span class="ml-5">
+                    <span v-if="site.deploy_status === 'deploying'" class="ml-5">
+                        {{ site.deploy_status }}
+                        <font-awesome-icon :icon="['fas', 'circle-notch']" class="text-success-600 text-base" spin></font-awesome-icon>
+                    </span>
+                    <span v-else-if="site.status === 'installed'" class="ml-5">
                         Active
-                        <font-awesome-icon v-if="site.status === 'installing'" :icon="['fas', 'circle-notch']" class="text-success-600 text-base" spin />
-                        <font-awesome-icon v-if="site.status === 'installed'" :icon="['far', 'check-circle']" class="text-success-600 text-base" ></font-awesome-icon>
+                        <font-awesome-icon :icon="['far', 'check-circle']" class="text-success-600 text-base" ></font-awesome-icon>
                     </span>
                 </div>
             </div>
@@ -84,7 +87,7 @@
                     </div>
 
                     <div v-if="site.repository_status === 'installed'">
-                        <deployment class="mb-8"></deployment>
+                        <deployment :site="site" class="mb-8"></deployment>
                         <deploy-script :site="site" class="mb-8"></deploy-script>
                         <!-- <deploy-trigger class="mb-8"></deploy-trigger> -->
                         <!-- <deploy-webhooks class="mb-8"></deploy-webhooks> -->

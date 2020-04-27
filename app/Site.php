@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Storage;
  * @property string repository_branch
  * @property string repository_status
  * @property string deploy_script
+ * @property string deploy_status
+ * @property string deploy_script_path
+ * @property string deploy_log_path
  */
 class Site extends Model
 {
@@ -64,6 +67,26 @@ class Site extends Model
     public function getDiskAttribute()
     {
         return "site-{$this->id}";
+    }
+
+    /**
+     * Get the path the to deploy script.
+     *
+     * @return string
+     */
+    public function getDeployScriptPathAttribute()
+    {
+        return storage_path("logs/deploy-{$this->name}.sh");
+    }
+
+    /**
+     * Get the path the to deploy log.
+     *
+     * @return string
+     */
+    public function getDeployLogPathAttribute()
+    {
+        return storage_path("logs/deploy-{$this->name}.log");
     }
 
     /**
@@ -157,5 +180,15 @@ class Site extends Model
             $key.'='.$value,
             Storage::disk($this->disk)->get('.env')
         ));
+    }
+
+    /**
+     * Run the deploy script.
+     */
+    public function deploy()
+    {
+        file_put_contents($this->deploy_script_path, $this->deploy_script);
+        chmod($this->deploy_script_path, 0755);
+        shell_exec("cd {$this->path} && date > {$this->deploy_log_path} && /bin/sh -c {$this->deploy_script_path} >> {$this->deploy_log_path} 2>&1");
     }
 }

@@ -7,12 +7,17 @@
         <h3 class="py-5 text-lg leading-6 font-medium text-gray-900">
           Deployment
         </h3>
-        <span class="inline-flex rounded-md shadow-sm">
-          <button @click="deployNow" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
-              <font-awesome-icon v-if="isDeploying" :icon="['fas', 'sync-alt']" class="mr-2" spin />
-              Deploy Now
-          </button>
-        </span>
+            <div class="sm:flex sm:items-center">
+                <button type="button" @click="deployNow" :disabled="busy" :class="{'opacity-50': busy}" class="sm:ml-48 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-brand-500 hover:bg-brand-400 focus:outline-none focus:border-brand-600 focus:shadow-outline-brand active:bg-brand-00 transition ease-in-out duration-150">
+                    <span v-if="busy">
+                        <font-awesome-icon  :icon="['fas', 'sync-alt']" class="mr-2" spin />
+                        Working...
+                    </span>
+                    <span v-else>
+                        Deploy Now
+                    </span>
+                </button>
+            </div>
       </div>
     </div>
 
@@ -37,32 +42,30 @@ import DeploymentLog from './DeploymentLog';
 import axios from 'axios';
 
 export default {
-  name: 'Deployment',
-  data() {
-    return {
-      isDeploying: false,
-    };
-  },
-  methods: {
-    deployNow() {
-      this.isDeploying = true;
-      const path = '/api/deploy';
-      axios.post(path)
-        .then((res) => {
-          this.isDeploying = false;
-          // eslint-disable-next-line
-          console.log(res);
-        })
-        .catch((error) => {
-          this.isDeploying = false;
-          // eslint-disable-next-line
-          console.error(error);
-        });
+    name: 'Deployment',
+    props: ['site'],
+    data() {
+        return {
+        busy: false,
+        };
     },
-  },
-  components: {
-    DeploymentLog,
-  },
+    methods: {
+        deployNow() {
+          this.busy = true;
+          axios.post(`/api/site/${this.site.id}/deployment/deploy`)
+            .then((response) => {
+                this.$parent.$emit('SiteUpdated', response.data)
+                this.busy = false;
+            })
+            .catch((error) => {
+                this.busy = false;
+                alert(error.message)
+            });
+        },
+    },
+    components: {
+        DeploymentLog,
+    },
 };
 </script>
 

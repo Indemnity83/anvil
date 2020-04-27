@@ -107,6 +107,7 @@ export default {
                 })
                 .catch(error => {
                     this.busy = false
+                    alert(error.message)
                 })
         }
     }

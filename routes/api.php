@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('/site', 'SiteController');
+Route::post('/site/{site}/deployment/deploy', 'SiteDeploymentController')->name('deploy');
+Route::get('/site/{site}/deployment/script', 'SiteDeploymentScriptController@show')->name('script.show');
+Route::put('/site/{site}/deployment/script', 'SiteDeploymentScriptController@store')->name('script.store');
 Route::post('/site/{site}/git', 'SiteGitController@store')->name('git.store');
 Route::put('/site/{site}/git', 'SiteGitController@update')->name('git.update');
 Route::delete('/site/{site}/git', 'SiteGitController@destroy')->name('git.destroy');
-Route::get('/site/{site}/deployment/script', 'SiteDeploymentScriptController@show')->name('script.show');
-Route::put('/site/{site}/deployment/script', 'SiteDeploymentScriptController@store')->name('script.store');
