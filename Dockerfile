@@ -20,7 +20,7 @@ ENV ANVIL_VERSION=$VERSION
 ENV UPLOAD_LIMIT=5M
 
 # Install packages
-RUN apk --no-cache add git composer nginx supervisor npm \
+RUN apk --no-cache add git composer nginx supervisor npm openssh-client \
     php php7-fpm php7-json php7-mbstring php7-iconv php7-pcntl php7-posix php7-sodium \
     php7-session php7-xml php7-curl php7-fileinfo php7-gd php7-intl php7-zip \
     php7-simplexml php7-pdo php7-sqlite3 php7-pdo_sqlite php7-exif php7-pdo_mysql \
