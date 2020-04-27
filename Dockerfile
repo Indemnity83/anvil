@@ -40,7 +40,8 @@ RUN chown -R anvil.anvil /run && \
     chmod 0751 /var/lib/nginx
 
 # Publish data volume (linked to application storage)
-RUN ln -s /home/anvil/storage /data
+RUN ln -s /app/storage /data && \
+    ln -s /app/storage/.ssh /home/anvil/.ssh
 VOLUME /data
 
 ## Copy the application

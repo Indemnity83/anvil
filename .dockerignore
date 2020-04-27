@@ -7,6 +7,7 @@ storage/framework/views/*
 storage/logs/*
 storage/nginx/*
 storage/sites/*
+storage/.ssh/*
 
 # Docker stuff
 Dockerfile

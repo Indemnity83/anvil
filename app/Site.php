@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string port
  * @property mixed directory
  * @property string status
+ * @property Server server
  * @property string disk
  * @property string path
  * @property string web_root
@@ -35,6 +36,25 @@ class Site extends Model
         'port',
         'directory',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'server'
+    ];
+
+    /**
+     * Get the associated server.
+     *
+     * @return Server
+     */
+    public function getServerAttribute()
+    {
+        return new Server;
+    }
 
     /**
      * Get the path to the site storage folder.

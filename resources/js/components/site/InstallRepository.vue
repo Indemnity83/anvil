@@ -9,9 +9,20 @@
     </div>
 
     <div class="border-t border-gray-200 px-4 py-4 sm:px-6 bg-gray-100">
-      <div class="mt-5">
+      <div class="">
         <form class="w-full" @submit.prevent="onSubmit()">
             <fieldset :disabled="busy" :class="{'opacity-50': busy}">
+
+                <div v-if="form.provider === 'custom'" class="mb-8 text-sm leading-5 text-gray-700">
+                    <p>When using a custom Git deployment, you must add the following SSH key to your source control provider before installing repositories:</p>
+
+                    <div class="rounded-md bg-warning-100 border-warning-300 border py-3 px-3 sm:px-6 mt-4">
+                        <div class="text-sm leading-5 text-warning-700 font-mono">
+                            <p class="break-all">{{ site.server.public_key }}</p>
+                        </div>
+                    </div>
+                </div>
+
           <div class="sm:flex mt-2 mb-6">
             <label class="w-40 md:w-48 pr-8 block text-sm sm:text-right font-medium leading-5 text-gray-700">Provider</label>
             <div class="flex-1 max-w-lg">
