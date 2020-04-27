@@ -50,7 +50,7 @@ class RepoInstall implements ShouldQueue
             $this->site->setEnvironmentVariable('APP_ENV', 'production');
             $this->site->setEnvironmentVariable('APP_DEBUG', 'false');
             $this->site->setEnvironmentVariable('DB_CONNECTION', 'sqlite');
-            $this->site->setEnvironmentVariable('DB_DATABASE', '');
+            $this->site->setEnvironmentVariable('DB_DATABASE', "{$this->site->path}/database/database.sqlite");
         }
 
         // Touch database.sqlite in the standard location
