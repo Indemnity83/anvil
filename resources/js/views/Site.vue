@@ -149,7 +149,6 @@
             this.getSite();
 
             this.$on('SiteUpdated', function(site) {
-                console.log(site)
                 this.site = site
             });
 
