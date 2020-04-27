@@ -44,14 +44,14 @@ RUN ln -s /home/anvil/storage /data
 VOLUME /data
 
 ## Copy the application
-COPY --chown=anvil:anvil . /home/anvil
-COPY --chown=anvil:anvil --from=build-vendor /app/vendor /home/anvil/vendor
-COPY --chown=anvil:anvil --from=build-assets /app/public /home/anvil/public
-COPY --chown=anvil:anvil .env.docker /home/anvil/.env
+COPY --chown=anvil:anvil . /app
+COPY --chown=anvil:anvil --from=build-vendor /app/vendor /app/vendor
+COPY --chown=anvil:anvil --from=build-assets /app/public /app/public
+COPY --chown=anvil:anvil .env.docker /app/.env
 
 # Switch to use a non-root user from here on
 USER anvil
-WORKDIR /home/anvil
+WORKDIR /app
 
 # Finish composer
 RUN composer dump-autoload --quiet
