@@ -43,7 +43,7 @@ class Site extends Model
      * @var array
      */
     protected $appends = [
-        'server'
+        'server',
     ];
 
     /**
