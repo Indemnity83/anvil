@@ -24,6 +24,7 @@ class CreateSitesTable extends Migration
             $table->string('repository_branch')->nullable();
             $table->string('repository_status')->nullable();
             $table->longText('deploy_script')->nullable();
+            $table->longText('deploy_status')->nullable();
             $table->timestamps();
         });
     }
