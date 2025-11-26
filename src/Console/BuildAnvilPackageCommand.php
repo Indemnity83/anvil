@@ -121,7 +121,7 @@ class BuildAnvilPackageCommand extends Command
         $base = base_path();
         $base = rtrim($base, DIRECTORY_SEPARATOR);
 
-        foreach ($files->allFiles($base) as $file) {
+        foreach ($files->allFiles($base, true) as $file) {
             $path = $file->getPathname();
             $relative = ltrim(str_replace($base, '', $path), DIRECTORY_SEPARATOR);
 
