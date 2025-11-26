@@ -106,14 +106,6 @@ class BuildAnvilPackageCommand extends Command
     {
         $this->info('[anvil] Warming Laravel caches…');
 
-        // Best-effort: failures shouldn't abort the build
-        try {
-            $this->callSilent('config:clear');
-            $this->callSilent('config:cache');
-        } catch (\Throwable $e) {
-            $this->warn('[anvil] Failed to warm config cache: ' . $e->getMessage());
-        }
-
         try {
             $this->callSilent('route:clear');
             $this->callSilent('route:cache');
