@@ -152,7 +152,7 @@ Example:
 /mnt/user/appdata/myapp
 ```
 
-### **Step 4 - Start the Docker server container and point it to your local directory
+### **Step 4 - Start the Docker server container and point it to your local directory***
 
 ```bash
 docker run -d \
