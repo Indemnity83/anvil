@@ -1,0 +1,54 @@
+{
+    "name": "indemnity83/anvil",
+    "description": "Anvil: package and ship Laravel apps as self-contained zip artifacts for the Anvil runtime (or any PHP host).",
+    "keywords": ["laravel", "deployment", "deploy", "package", "zip", "docker", "runtime", "homelab", "unraid", "anvil"],
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/indemnity83/anvil/issues",
+        "source": "https://github.com/indemnity83/anvil"
+    },
+    "authors": [
+        {
+            "name": "Kyle Klaus",
+            "email": "kklaus@indemnity83.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "Anvil\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Anvil\\AnvilServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.2.0"
+        },
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
