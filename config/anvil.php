@@ -31,7 +31,6 @@ return [
         'storage/app',
         'storage/logs',
         '.env',
-        '.env.*',
         'vendor/bin',
         'docker',
         'apps',
