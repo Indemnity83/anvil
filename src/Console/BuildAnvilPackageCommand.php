@@ -4,8 +4,8 @@ namespace Anvil\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use ZipArchive;
 use Symfony\Component\Process\Process;
+use ZipArchive;
 
 class BuildAnvilPackageCommand extends Command
 {
@@ -110,7 +110,7 @@ class BuildAnvilPackageCommand extends Command
             $this->callSilent('route:clear');
             $this->callSilent('route:cache');
         } catch (\Throwable $e) {
-            $this->warn('[anvil] Failed to warm route cache: ' . $e->getMessage());
+            $this->warn('[anvil] Failed to warm route cache: '.$e->getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ class BuildAnvilPackageCommand extends Command
                 continue;
             }
 
-            $target = $buildDir . DIRECTORY_SEPARATOR . $relative;
+            $target = $buildDir.DIRECTORY_SEPARATOR.$relative;
             $files->ensureDirectoryExists(dirname($target));
             $files->copy($path, $target);
         }
@@ -155,7 +155,7 @@ class BuildAnvilPackageCommand extends Command
 
     protected function createZipFrom(string $sourceDir, string $zipPath): void
     {
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
 
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new \RuntimeException("Cannot create zip at {$zipPath}");
@@ -192,7 +192,7 @@ class BuildAnvilPackageCommand extends Command
         });
 
         if (! $process->isSuccessful()) {
-            throw new \RuntimeException("Command failed: " . implode(' ', $command));
+            throw new \RuntimeException('Command failed: '.implode(' ', $command));
         }
     }
 }

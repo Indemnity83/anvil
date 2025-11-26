@@ -16,9 +16,11 @@
     ],
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0"
+        "laravel/framework": "^11.0",
+        "ext-zip": "*"
     },
     "require-dev": {
+        "laravel/pint": "^1.26",
         "orchestra/testbench": "^9.15"
     },
     "autoload": {
