@@ -48,7 +48,7 @@ jobs:
             # ----------------------------------------------------------------
 
             # dev-php82 / dev-php83 / dev-php84
-            type=raw,value=dev-php${{ replace(matrix.php_version, '.', '') }},enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=dev-php${{ matrix.php_version }},enable=${{ github.ref == 'refs/heads/main' }}
 
             # dev -> highest PHP version on main
             type=raw,value=dev,enable=${{ github.ref == 'refs/heads/main' && matrix.php_version == env.HIGHEST_PHP }}
@@ -59,10 +59,13 @@ jobs:
 
             # [version]-php82 / [version]-php83 / [version]-php84
             # (where [version] is the git tag name, e.g. v0.1.0)
-            type=ref,suffix=-php${{ replace(matrix.php_version, '.', '') }},event=tag
+            type=ref,suffix=-php${{ matrix.php_version }},event=tag
 
             # [version] -> highest PHP version for that release (e.g. v0.1.0)
             type=ref,event=tag,enable=${{ startsWith(github.ref, 'refs/tags/v') && matrix.php_version == env.HIGHEST_PHP }}
+
+            # php8.2 / php8.3 / php8.4 -> latest tagged release for each specific PHP version
+            type=raw,value=php${{ matrix.php_version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
             # latest -> most recent tagged release of the highest PHP version
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') && matrix.php_version == env.HIGHEST_PHP }}
