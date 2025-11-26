@@ -164,7 +164,7 @@ class BuildAnvilPackageCommand extends Command
         $sourceDir = rtrim($sourceDir, DIRECTORY_SEPARATOR);
 
         $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($sourceDir, \FilesystemIterator::SKIP_DOTS),
+            new \RecursiveDirectoryIterator($sourceDir, \FilesystemIterator::KEY_AS_PATHNAME),
             \RecursiveIteratorIterator::SELF_FIRST
         );
 
